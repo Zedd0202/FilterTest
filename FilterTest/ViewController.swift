@@ -26,8 +26,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         guard let imageURL = info[.imageURL] as? URL, let originalCIImage = CIImage(contentsOf: imageURL)  else { return }
         let context = CIContext()
+                
         let sepiaCIImage = self.sepiaFilter(originalCIImage, intensity: 0.8)!
-        let image = UIImage(ciImage: sepiaCIImage)
+        
+        let cgImage = context.createCGImage(sepiaCIImage, from: sepiaCIImage.extent)!
+        
+        let image = UIImage(cgImage: cgImage)
+        
+        //let image = UIImage(ciImage: sepiaCIImage)
         self.picker.dismiss(animated: true, completion: {
             self.myImageView.image = image
         })
